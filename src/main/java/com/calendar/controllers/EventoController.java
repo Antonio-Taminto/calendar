@@ -28,7 +28,7 @@ public class EventoController {
     public ResponseEntity<Evento> getEvento(@PathVariable Long id){
         Optional<Evento> eventoOptional = service.getEvento(id);
         if(eventoOptional.isEmpty()){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(eventoOptional.get());
     }
@@ -38,7 +38,7 @@ public class EventoController {
             @RequestBody Evento evento){
         Optional<Evento> eventoOptional = service.updateEvento(evento,id);
         if(eventoOptional.isEmpty()){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(eventoOptional.get());
     }
@@ -46,7 +46,7 @@ public class EventoController {
     public ResponseEntity<Evento> deleteEventoById(@PathVariable Long id){
         Optional<Evento> eventoOptional = service.deleteEventoById(id);
         if(eventoOptional.isEmpty()){
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(eventoOptional.get());
     }
