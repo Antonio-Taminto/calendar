@@ -1,6 +1,7 @@
 package com.calendar.servicies;
 
 import com.calendar.entities.Calendario;
+import com.calendar.entities.Evento;
 import com.calendar.repositories.CalendarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,8 @@ import java.util.Optional;
 public class CalendarioService {
     @Autowired
     private CalendarioRepository repository;
+    @Autowired
+    private EventoService eventoService;
 
     public Calendario addCalendario(Calendario calendario){
         //salviamo l'oggetto e poi lo ritorniamo
@@ -55,6 +58,18 @@ public class CalendarioService {
             //ritorniamo l'oggetto cancellato
             return calendarioOptional;
         }else {
+            return Optional.empty();
+        }
+    }
+    public Optional<Calendario> addEventoToCalendario(Long id,Evento evento){
+        Optional<Calendario> calendarioOptional = getCalendarioById(id);
+        if(calendarioOptional.isPresent()){
+            evento.setCalendario(calendarioOptional.get());
+            eventoService.addEvento(evento);
+            calendarioOptional.get().getEventoList().add(evento);
+            Calendario calendarioWithEvento = repository.save(calendarioOptional.get());
+            return Optional.of(calendarioWithEvento);
+        }else{
             return Optional.empty();
         }
     }

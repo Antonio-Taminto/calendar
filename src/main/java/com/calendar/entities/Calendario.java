@@ -1,5 +1,6 @@
 package com.calendar.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -10,11 +11,11 @@ public class Calendario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    @Column
+    @Column(nullable = false)
     private String name;
     @Column
     private String descrizione;
-    @Column
+    @Column(nullable = false)
     private String colore;
     @OneToMany(mappedBy = "calendario")
     private List<Evento> eventoList;

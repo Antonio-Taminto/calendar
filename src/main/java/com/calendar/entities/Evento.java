@@ -12,13 +12,13 @@ public class Evento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+    @Column(nullable = false)
     private String name;
     @Column
     private String descrizione;
-    @Column
+    @Column(nullable = false)
     private LocalDateTime dataInizio;
-    @Column
+    @Column(nullable = false)
     private LocalDateTime dataFine;
     @ManyToOne
     @JoinColumn(name = "calendario_id")

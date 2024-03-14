@@ -16,15 +16,15 @@ public class EventoController {
     @Autowired
     private EventoService service;
 
-    @PostMapping("/postevento")
-    public ResponseEntity<Evento> postEvento(@RequestBody Evento evento){
+    @PostMapping("/post")
+    public ResponseEntity<Evento> postEvento( @RequestBody Evento evento){
         return ResponseEntity.ok().body(service.addEvento(evento));
     }
-    @GetMapping("/geteventi")
+    @GetMapping("/getall")
     public ResponseEntity<List<Evento>> getEventi(){
         return ResponseEntity.ok().body(service.getEventi());
     }
-    @GetMapping("/getevento/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<Evento> getEventoById(@PathVariable Long id){
         Optional<Evento> eventoOptional = service.getEvento(id);
         if(eventoOptional.isEmpty()){
@@ -32,7 +32,7 @@ public class EventoController {
         }
         return ResponseEntity.ok().body(eventoOptional.get());
     }
-    @PutMapping("/putevento/{id}")
+    @PutMapping("/put/{id}")
     public ResponseEntity<Evento> updateEvento(
             @PathVariable Long id,
             @RequestBody Evento evento){
@@ -42,7 +42,7 @@ public class EventoController {
         }
         return ResponseEntity.ok().body(eventoOptional.get());
     }
-    @DeleteMapping("/deleteevento/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Evento> deleteEventoById(@PathVariable Long id){
         Optional<Evento> eventoOptional = service.deleteEventoById(id);
         if(eventoOptional.isEmpty()){
