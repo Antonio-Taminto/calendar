@@ -29,7 +29,7 @@ public class EventoService {
     public Optional<Evento> updateEvento(Evento evento,Long id) {
         //recuperiamo l'oggetto da modificare grazie all'id
         Optional<Evento> eventoOptional = repository.findById(id);
-        //se l'oggetto è presente
+        //controlliamo se l'oggetto è presente
         if (eventoOptional.isPresent()) {
             //modifichiamo tutti i parametri dell'oggetto
             eventoOptional.get().setName(evento.getName());
@@ -53,11 +53,12 @@ public class EventoService {
         if(eventoOptional.isPresent()){
             //cancelliamo l'oggetto
             repository.delete(eventoOptional.get());
+            //ritorniamo l'oggetto cancellato
+            return eventoOptional;
         }else{
             //se non presente viene ritornato un oggetto vuoto
             return Optional.empty();
         }
-        //ritorniamo l'oggetto cancellato
-        return eventoOptional;
+
     }
 }

@@ -1,11 +1,13 @@
 package com.calendar.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Table
 public class Evento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,13 +20,18 @@ public class Evento {
     private LocalDateTime dataInizio;
     @Column
     private LocalDateTime dataFine;
+    @ManyToOne
+    @JoinColumn(name = "calendario_id")
+    @JsonIgnore
+    private Calendario calendario;
 
-    public Evento(Long id, String name, String descrizione, LocalDateTime dataInizio, LocalDateTime dataFine) {
+    public Evento(Long id, String name, String descrizione, LocalDateTime dataInizio, LocalDateTime dataFine,Calendario calendario) {
         this.id = id;
         this.name = name;
         this.descrizione = descrizione;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
+        this.calendario = calendario;
     }
 
     public Evento() {
@@ -68,5 +75,13 @@ public class Evento {
 
     public void setDataFine(LocalDateTime dataFine) {
         this.dataFine = dataFine;
+    }
+
+    public Calendario getCalendario() {
+        return calendario;
+    }
+
+    public void setCalendario(Calendario calendario) {
+        this.calendario = calendario;
     }
 }

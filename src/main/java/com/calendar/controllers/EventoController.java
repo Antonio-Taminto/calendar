@@ -25,7 +25,7 @@ public class EventoController {
         return ResponseEntity.ok().body(service.getEventi());
     }
     @GetMapping("/getevento/{id}")
-    public ResponseEntity<Evento> getEvento(@PathVariable Long id){
+    public ResponseEntity<Evento> getEventoById(@PathVariable Long id){
         Optional<Evento> eventoOptional = service.getEvento(id);
         if(eventoOptional.isEmpty()){
             return ResponseEntity.notFound().build();
