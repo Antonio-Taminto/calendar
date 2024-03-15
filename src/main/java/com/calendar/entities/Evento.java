@@ -3,7 +3,6 @@ package com.calendar.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,7 +12,7 @@ public class Evento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String name;
+    private String nome;
     @Column
     private String descrizione;
     @Column(nullable = false)
@@ -25,9 +24,9 @@ public class Evento {
     @JsonIgnore
     private Calendario calendario;
 
-    public Evento(Long id, String name, String descrizione, LocalDateTime dataInizio, LocalDateTime dataFine,Calendario calendario) {
+    public Evento(Long id, String nome, String descrizione, LocalDateTime dataInizio, LocalDateTime dataFine, Calendario calendario) {
         this.id = id;
-        this.name = name;
+        this.nome = nome;
         this.descrizione = descrizione;
         this.dataInizio = dataInizio;
         this.dataFine = dataFine;
@@ -45,12 +44,12 @@ public class Evento {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getNome() {
+        return nome;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getDescrizione() {

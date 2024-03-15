@@ -1,7 +1,5 @@
 package com.calendar.servicies;
 
-import com.calendar.controllers.CalendarioController;
-import com.calendar.entities.Calendario;
 import com.calendar.entities.Evento;
 import com.calendar.repositories.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +31,7 @@ public class EventoService {
         //controlliamo se l'oggetto è presente
         if (eventoOptional.isPresent()) {
             //modifichiamo tutti i parametri dell'oggetto
-            eventoOptional.get().setName(evento.getName());
+            eventoOptional.get().setNome(evento.getNome());
             eventoOptional.get().setDescrizione(evento.getDescrizione());
             eventoOptional.get().setDataInizio(evento.getDataInizio());
             eventoOptional.get().setDataFine(evento.getDataFine());
@@ -45,7 +43,6 @@ public class EventoService {
             //se non presente ritorniamo un oggetto vuoto
             return Optional.empty();
         }
-
     }
     public Optional<Evento> deleteEventoById(Long id){
         //recuperiamo l'oggetto da eliminare tramite l'id

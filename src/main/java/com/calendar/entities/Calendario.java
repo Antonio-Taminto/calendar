@@ -1,6 +1,5 @@
 package com.calendar.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -12,7 +11,7 @@ public class Calendario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     @Column(nullable = false)
-    private String name;
+    private String nome;
     @Column
     private String descrizione;
     @Column(nullable = false)
@@ -20,9 +19,9 @@ public class Calendario {
     @OneToMany(mappedBy = "calendario")
     private List<Evento> eventoList;
 
-    public Calendario(Long id, String name, String descrizione, String colore, List<Evento> eventoList) {
+    public Calendario(Long id, String nome, String descrizione, String colore, List<Evento> eventoList) {
         this.id = id;
-        this.name = name;
+        this.nome = nome;
         this.descrizione = descrizione;
         this.colore = colore;
         this.eventoList = eventoList;
@@ -39,12 +38,12 @@ public class Calendario {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getNome() {
+        return nome;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getDescrizione() {

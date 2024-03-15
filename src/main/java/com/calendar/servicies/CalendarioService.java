@@ -35,7 +35,7 @@ public class CalendarioService {
         //controlliamo se l'oggetto è presente
         if(calendarioOptional.isPresent()){
             //modifichiamo tutti i parametri dell'oggetto
-            calendarioOptional.get().setName(calendario.getName());
+            calendarioOptional.get().setNome(calendario.getNome());
             calendarioOptional.get().setDescrizione(calendario.getDescrizione());
             calendarioOptional.get().setColore(calendario.getColore());
             //calendarioOptional.get().setEventoList(calendario.getEventoList());
@@ -61,14 +61,21 @@ public class CalendarioService {
             return Optional.empty();
         }
     }
-    public Optional<Calendario> addEventoToCalendario(Long id,Evento evento){
-        Optional<Calendario> calendarioOptional = getCalendarioById(id);
+    public Optional<Calendario> addEventoToCalendario(Long idCalendario,Long idEvento){
+        Optional<Calendario> calendarioOptional = getCalendarioById(idCalendario);
         if(calendarioOptional.isPresent()){
-            evento.setCalendario(calendarioOptional.get());
-            eventoService.addEvento(evento);
-            calendarioOptional.get().getEventoList().add(evento);
-            Calendario calendarioWithEvento = repository.save(calendarioOptional.get());
-            return Optional.of(calendarioWithEvento);
+            Optional<Evento> eventoOptional = eventoService.getEvento(idEvento);
+            if(eventoOptional.isPresent()) {
+                if(!calendarioOptional.get().getEventoList().contains(eventoOptional.get())) {
+                    eventoOptional.get().setCalendario(calendarioOptional.get());
+                    eventoService.addEvento(eventoOptional.get());
+                    return calendarioOptional;
+                }else {
+                    return Optional.empty();
+                }
+            }else {
+                return Optional.empty();
+            }
         }else{
             return Optional.empty();
         }
