@@ -47,8 +47,8 @@ public class CalendarioController {
         }
         return ResponseEntity.ok().body(calendarioOptional.get());
     }
-    @PutMapping("/addevento/{id}")
-    public ResponseEntity<Calendario> addEvento(@PathVariable Long id, @RequestBody Evento evento){
+    @PutMapping("/addevento/{id}/")
+    public ResponseEntity<Calendario> addEvento(@PathVariable Long id, @RequestParam Long evento){
         Optional<Calendario> calendarioOptional = service.addEventoToCalendario(id,evento);
         if(calendarioOptional.isEmpty()){
             return ResponseEntity.notFound().build();
