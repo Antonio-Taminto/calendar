@@ -35,7 +35,7 @@ public class CalendarioService {
         //controlliamo se l'oggetto è presente
         if(calendarioOptional.isPresent()){
             //modifichiamo tutti i parametri dell'oggetto
-            calendarioOptional.get().setName(calendario.getName());
+            calendarioOptional.get().setNome(calendario.getNome());
             calendarioOptional.get().setDescrizione(calendario.getDescrizione());
             calendarioOptional.get().setColore(calendario.getColore());
             //calendarioOptional.get().setEventoList(calendario.getEventoList());
@@ -67,8 +67,8 @@ public class CalendarioService {
             evento.setCalendario(calendarioOptional.get());
             eventoService.addEvento(evento);
             calendarioOptional.get().getEventoList().add(evento);
-            Calendario calendarioWithEvento = repository.save(calendarioOptional.get());
-            return Optional.of(calendarioWithEvento);
+            Calendario calendarioWithNewEvento = repository.save(calendarioOptional.get());
+            return Optional.of(calendarioWithNewEvento);
         }else{
             return Optional.empty();
         }
