@@ -50,18 +50,8 @@ public class UserController {
         return ResponseEntity.ok().body(userOptional.get());
     }
     @PutMapping("/addcalendario/{id}")
-    public ResponseEntity<User> putCalendario(@PathVariable Long id,@RequestBody Calendario calendario){
+    public ResponseEntity<User> putCalendario(@PathVariable Long id,@RequestParam Long calendario){
         Optional<User> userOptional = service.addCalendarioToUser(id,calendario);
-        if(userOptional.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(userOptional.get());
-    }
-    @PutMapping("/addevento/{idUser}/{idCalendario}")
-    public ResponseEntity<User> putEvento(@PathVariable(name = "idUser") Long idUser,
-                                          @PathVariable(name = "idCalendario") Long idCalendario,
-                                          @RequestBody Evento evento){
-        Optional<User> userOptional = service.addEventoToUser(idUser,idCalendario,evento);
         if(userOptional.isEmpty()){
             return ResponseEntity.notFound().build();
         }
