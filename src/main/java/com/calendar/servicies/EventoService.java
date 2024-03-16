@@ -1,5 +1,6 @@
 package com.calendar.servicies;
 
+import com.calendar.entities.Calendario;
 import com.calendar.entities.Evento;
 import com.calendar.repositories.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,21 +14,65 @@ public class EventoService {
 
     @Autowired
     private EventoRepository repository;
+
+    /**
+     * dato un Evento in ingresso viene salvato
+     * al db tramite la repository.
+     * @param evento
+     * @return Evento
+     */
     public Evento addEvento(Evento evento){
         //salviamo l'oggetto e poi lo ritorniamo
         return repository.save(evento);
     }
+
+    /**
+     * richiede tutta la lista di Evento presenti
+     * sul db tramite la repository.
+     * Successivamente ritorna la lista di Evento presenti sul db.
+     * @return List</>
+     */
     public List<Evento> getEventi(){
         //ritorniamo tutta la lista degli oggetti
         return repository.findAll();
     }
+
+    /**
+     * dato un Long in ingresso che rappresenta l'id dell'Evento
+     * viene cercato l'Evento con il medesimo id tramite la repository,
+     * prima di ritornare l'Evento viene controllato che
+     * l'oggetto sia presente,
+     * in caso contrario viene ritornato un oggetto Optional vuoto.
+     * @param id
+     * @return Optional</>
+     */
     public Optional<Evento> getEvento(Long id){
-        //cerchiamo e poi ritorniamo l'oggetto tramite id
-        return repository.findById(id);
+        //cerchiamo l'oggetto tramite id
+        Optional<Evento> eventoOptional = repository.findById(id);
+        //controlliamo che l'oggetto Optional sia presente
+        if(eventoOptional.isPresent()){
+            //se presente ritorniamo l'oggetto Optional
+            return eventoOptional;
+        }else {
+            //se non presente ritorniamo un oggetto Optional vuoto
+            return Optional.empty();
+        }
     }
+
+    /**
+     * Dato un Long id in ingresso viene richiesto al db
+     * un Evento con il medesimo id,
+     * se presente viene utilizzato l'Evento preso in
+     * ingresso per modificare tutti i dati dell'evento
+     * e infine viene ritornato l'oggetto Evento modificato.
+     * se invece non è presente viene ritornato un oggetto vuoto.
+     * @param evento
+     * @param id
+     * @return Optional</>
+     */
     public Optional<Evento> updateEvento(Evento evento,Long id) {
         //recuperiamo l'oggetto da modificare grazie all'id
-        Optional<Evento> eventoOptional = repository.findById(id);
+        Optional<Evento> eventoOptional = getEvento(id);
         //controlliamo se l'oggetto è presente
         if (eventoOptional.isPresent()) {
             //modifichiamo tutti i parametri dell'oggetto
@@ -44,9 +89,19 @@ public class EventoService {
             return Optional.empty();
         }
     }
+
+    /**
+     * dato un Long id in ingresso viene richiesto
+     * al db un Evento col medesimo id.
+     * se presente viene cancellato l'Evento dal db
+     * e infine viene ritornato l'Evento eliminato.
+     * Se non presente viene ritornato un oggetto Optional vuoto.
+     * @param id
+     * @return Optional</>
+     */
     public Optional<Evento> deleteEventoById(Long id){
         //recuperiamo l'oggetto da eliminare tramite l'id
-        Optional<Evento> eventoOptional = repository.findById(id);
+        Optional<Evento> eventoOptional = getEvento(id);
         //controlliamo che l'oggetto sia presente
         if(eventoOptional.isPresent()){
             //cancelliamo l'oggetto
