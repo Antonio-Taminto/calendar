@@ -43,7 +43,6 @@ public class EventoService {
             //se non presente ritorniamo un oggetto vuoto
             return Optional.empty();
         }
-
     }
     public Optional<Evento> deleteEventoById(Long id){
         //recuperiamo l'oggetto da eliminare tramite l'id

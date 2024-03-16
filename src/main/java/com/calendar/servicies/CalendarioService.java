@@ -61,14 +61,21 @@ public class CalendarioService {
             return Optional.empty();
         }
     }
-    public Optional<Calendario> addEventoToCalendario(Long id,Evento evento){
-        Optional<Calendario> calendarioOptional = getCalendarioById(id);
+    public Optional<Calendario> addEventoToCalendario(Long idCalendario,Long idEvento){
+        Optional<Calendario> calendarioOptional = getCalendarioById(idCalendario);
         if(calendarioOptional.isPresent()){
-            evento.setCalendario(calendarioOptional.get());
-            eventoService.addEvento(evento);
-            calendarioOptional.get().getEventoList().add(evento);
-            Calendario calendarioWithNewEvento = repository.save(calendarioOptional.get());
-            return Optional.of(calendarioWithNewEvento);
+            Optional<Evento> eventoOptional = eventoService.getEvento(idEvento);
+            if(eventoOptional.isPresent()) {
+                if(!calendarioOptional.get().getEventoList().contains(eventoOptional.get())) {
+                    eventoOptional.get().setCalendario(calendarioOptional.get());
+                    eventoService.addEvento(eventoOptional.get());
+                    return calendarioOptional;
+                }else {
+                    return Optional.empty();
+                }
+            }else {
+                return Optional.empty();
+            }
         }else{
             return Optional.empty();
         }

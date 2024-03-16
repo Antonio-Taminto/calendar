@@ -52,43 +52,23 @@ public class UserService {
             return Optional.empty();
         }
     }
-    public Optional<User> addCalendarioToUser(Long id, Calendario calendario){
-        Optional<User> userOptional = getUserFromId(id);
-        if(userOptional.isPresent()){
-            userOptional.get().getCalendarioList().add(calendario);
-            calendario.setUser(userOptional.get());
-
-            userOptional.get().getCalendarioList().add(calendario);
-            User userWithNewCalendario = repository.save(userOptional.get());
-            return Optional.of(userWithNewCalendario);
-        }else {
-            return Optional.empty();
-        }
-    }
-    public Optional<User> addEventoToUser(Long idUser,Long idCalendario, Evento evento){
+    public Optional<User> addCalendarioToUser(Long idUser, Long idCalendario){
         Optional<User> userOptional = getUserFromId(idUser);
-        Optional<Calendario> calendarioOptional = Optional.empty();
-        for(Calendario calendario : userOptional.get().getCalendarioList()){
-            if(calendario.getId().equals(idCalendario)){
-                calendarioOptional = Optional.of(calendario);
-            }
-        }
-        if(userOptional.isPresent() && calendarioOptional.isPresent()){
-            Optional<Calendario> calendarioWithNewEventoOpt = calendarioService.addEventoToCalendario(idCalendario,evento);
-            if(calendarioWithNewEventoOpt.isPresent()){
-                userOptional.get().getCalendarioList().forEach(calendario -> {
-                    if(calendario.getId().equals(calendarioWithNewEventoOpt.get().getId())){
-                        calendario = calendarioWithNewEventoOpt.get();
-                    }
-                });
-            }else{
+        if(userOptional.isPresent()){
+            Optional<Calendario> calendarioOptional = calendarioService.getCalendarioById(idCalendario);
+            if(calendarioOptional.isPresent()) {
+                if(!userOptional.get().getCalendarioList().contains(calendarioOptional.get())) {
+                    calendarioOptional.get().setUser(userOptional.get());
+                    calendarioService.addCalendario(calendarioOptional.get());
+                    return userOptional;
+                }else {
+                    return Optional.empty();
+                }
+            }else {
                 return Optional.empty();
             }
-            User userWithNewEvento = repository.save(userOptional.get());
-            return Optional.of(userWithNewEvento);
-        }else {
+        }else{
             return Optional.empty();
         }
-
     }
 }
