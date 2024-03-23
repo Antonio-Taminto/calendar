@@ -17,7 +17,7 @@ public class Calendario {
     private String descrizione;
     @Column(nullable = false)
     private String colore;
-    @OneToMany(mappedBy = "calendario")
+    @OneToMany(mappedBy = "calendario",cascade = CascadeType.ALL)
     private List<Evento> eventoList;
     @ManyToOne
     @JoinColumn(name = "calendario_id")

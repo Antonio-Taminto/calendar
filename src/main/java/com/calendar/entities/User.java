@@ -1,5 +1,6 @@
 package com.calendar.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ public class User {
     private String cognome;
     @Column
     private LocalDate dataDiNascita;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Calendario> calendarioList;
 
     public User(Long id, String nome, String cognome, LocalDate dataDiNascita, List<Calendario> calendarioList) {
