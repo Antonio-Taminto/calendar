@@ -1,6 +1,7 @@
 package com.calendar.controllers;
 
 import com.calendar.servicies.EventoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +10,7 @@ import com.calendar.entities.Evento;
 import java.util.List;
 import java.util.Optional;
 
-
+@Tag(name = "Evento" ,description = "controller delle APIs per gli Eventi")
 @RestController
 @RequestMapping("/evento")
 public class EventoController {
