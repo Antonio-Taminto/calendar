@@ -20,7 +20,7 @@ public class Calendario {
     @OneToMany(mappedBy = "calendario",cascade = CascadeType.ALL)
     private List<Evento> eventoList;
     @ManyToOne
-    @JoinColumn(name = "calendario_id")
+    @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
 
