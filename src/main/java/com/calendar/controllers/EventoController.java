@@ -28,7 +28,7 @@ public class EventoController {
                     "La risposta è l' oggetto Evento appena creato con id,nome,descrizione,data inizio,data fine." ,
             tags = { "Evento", "post" })
     @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
-    @PostMapping("/post")
+    @PostMapping("/crea")
     public ResponseEntity<Evento> postEvento( @RequestBody Evento evento){
         return ResponseEntity.ok().body(service.addEvento(evento));
     }
@@ -38,7 +38,7 @@ public class EventoController {
                     "La risposta è una lista di oggetto Evento con id,nome,descrizione,data inizio,data fine." ,
             tags = { "Evento", "get" })
     @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
-    @GetMapping("/getall")
+    @GetMapping("/prenditutti")
     public ResponseEntity<List<Evento>> getEventi(){
         return ResponseEntity.ok().body(service.getEventi());
     }
@@ -48,7 +48,7 @@ public class EventoController {
                     "La risposta è un oggetto Evento con id,nome,descrizione,data inizio,data fine." ,
             tags = { "Evento", "get" })
     @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
-    @GetMapping("/get/{id}")
+    @GetMapping("/prendi/{id}")
     public ResponseEntity<Evento> getEventoById(@PathVariable Long id){
         Optional<Evento> eventoOptional = service.getEvento(id);
         if(eventoOptional.isEmpty()){
@@ -63,7 +63,7 @@ public class EventoController {
                     "La risposta è l' oggetto Evento modificato con id,nome,descrizione,data inizio,data fine." ,
             tags = { "Evento", "put" })
     @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
-    @PutMapping("/put/{id}")
+    @PutMapping("/modifica/{id}")
     public ResponseEntity<Evento> updateEvento(
             @PathVariable Long id,
             @RequestBody Evento evento){
@@ -80,7 +80,7 @@ public class EventoController {
                     "La risposta è l' oggetto Evento appena eliminato con id,nome,descrizione,data inizio,data fine." ,
             tags = { "Evento", "delete" })
     @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/elimina/{id}")
     public ResponseEntity<Evento> deleteEventoById(@PathVariable Long id){
         Optional<Evento> eventoOptional = service.deleteEventoById(id);
         if(eventoOptional.isEmpty()){

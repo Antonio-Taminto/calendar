@@ -90,7 +90,7 @@ public class CalendarioController {
     @Operation(
             summary = "Recupera un Calendario dall'id e gli aggiunge un Evento recuperato dall'id",
             description = "richiede un Calendario e un Evento dato l'id di entrambi." +
-                    "recuperato il Calendario , viene recuperato l'Evento e salvato nella lista di eventi"+
+                    "recuperato il Calendario , viene recuperato l'Evento e salvato nella lista di Eventi"+
                     "La risposta è un oggetto Calendario con id,nome,descrizione,colore,lista di eventi." ,
             tags = { "Calendario", "put" })
     @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
