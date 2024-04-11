@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.calendar</groupId>
 	<artifactId>calendar</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.5</version>
 	<name>calendar</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>

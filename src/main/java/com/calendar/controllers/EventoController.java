@@ -1,6 +1,8 @@
 package com.calendar.controllers;
 
 import com.calendar.entities.Calendario;
+import com.calendar.entities.DTO.CreateEventoRequestDTO;
+import com.calendar.entities.DTO.EventoResponseDTO;
 import com.calendar.servicies.EventoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,7 +31,7 @@ public class EventoController {
             tags = { "Evento", "post" })
     @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
     @PostMapping("/crea")
-    public ResponseEntity<Evento> postEvento( @RequestBody Evento evento){
+    public ResponseEntity<EventoResponseDTO> postEvento(@RequestBody CreateEventoRequestDTO evento){
         return ResponseEntity.ok().body(service.addEvento(evento));
     }
     @Operation(

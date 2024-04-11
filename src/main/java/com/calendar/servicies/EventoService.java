@@ -1,6 +1,7 @@
 package com.calendar.servicies;
 
-import com.calendar.entities.Calendario;
+import com.calendar.entities.DTO.CreateEventoRequestDTO;
+import com.calendar.entities.DTO.EventoResponseDTO;
 import com.calendar.entities.Evento;
 import com.calendar.repositories.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,24 @@ public class EventoService {
     /**
      * dato un Evento in ingresso viene salvato
      * al db tramite la repository.
-     * @param evento
+     * @param createEventoRequestDTO
      * @return Evento
      */
-    public Evento addEvento(Evento evento){
-        //salviamo l'oggetto e poi lo ritorniamo
-        return repository.save(evento);
+    public EventoResponseDTO addEvento(CreateEventoRequestDTO createEventoRequestDTO){
+        Evento evento = new Evento();
+        evento.setNome(createEventoRequestDTO.getNome());
+        evento.setDescrizione(createEventoRequestDTO.getDescrizione());
+        evento.setDataInizio(createEventoRequestDTO.getDataInizio());
+        evento.setDataFine(createEventoRequestDTO.getDataFine());
+
+        Evento savedEvento = repository.save(evento);
+        EventoResponseDTO eventoResponseDTO = new EventoResponseDTO();
+        eventoResponseDTO.setId(savedEvento.getId());
+        eventoResponseDTO.setNome(savedEvento.getNome());
+        eventoResponseDTO.setDescrizione(savedEvento.getDescrizione());
+        eventoResponseDTO.setDataInizio(savedEvento.getDataInizio());
+        eventoResponseDTO.setDataFine(savedEvento.getDataFine());
+        return eventoResponseDTO;
     }
 
     /**

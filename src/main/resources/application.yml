@@ -1,4 +1,5 @@
 spring:
+  output.ansi.enabled: ALWAYS
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/calendar
     username: root
@@ -8,4 +9,42 @@ spring:
     database: mysql
     show_sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
+---
+spring:
+  output.ansi.enabled: ALWAYS
+  config:
+    activate:
+      on-profile: prod
+server:
+  port: 5000
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/calendarprod
+    username: root
+    password: develhope
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database: mysql
+    show_sql: true
+    hibernate:
+      ddl-auto: update
+
+---
+
+spring:
+  output.ansi.enabled: ALWAYS
+  config:
+    activate:
+      on-profile: test
+server:
+  port: 4000
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/calendartest
+    username: root
+    password: develhope
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database: mysql
+    show_sql: true
+    hibernate:
+      ddl-auto: update

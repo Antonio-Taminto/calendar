@@ -21,7 +21,6 @@ public class Evento {
     private LocalDateTime dataFine;
     @ManyToOne
     @JoinColumn(name = "calendario_id")
-    @JsonIgnore
     private Calendario calendario;
 
     public Evento(Long id, String nome, String descrizione, LocalDateTime dataInizio, LocalDateTime dataFine, Calendario calendario) {

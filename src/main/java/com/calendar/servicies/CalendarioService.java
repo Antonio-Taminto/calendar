@@ -135,7 +135,7 @@ public class CalendarioService {
                     //se non presente effettuiamo il collegamento con l'oggetto da aggiungere e l'oggetto a cui vogliamo aggiungerlo
                     eventoOptional.get().setCalendario(calendarioOptional.get());
                     //salviamo l'oggetto da aggiungere
-                    eventoService.addEvento(eventoOptional.get());
+                    //eventoService.addEvento(eventoOptional.get());
                     //in fine ritorniamo il nostro oggetto
                     return calendarioOptional;
                 }else {
