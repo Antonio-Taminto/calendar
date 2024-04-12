@@ -25,8 +25,12 @@ public class EventoService {
     private CalendarioRepository calendarioRepository;
 
     /**
-     * dato un Evento in ingresso viene salvato
-     * al db tramite la repository.
+     * Viene cercato il Calendario che vuole creare l'Evento, se presente
+     * il CreateEventoRequestDTO viene convertito in entity,
+     * viene settato il Calendario all'entity
+     * che viene salvata al db tramite la repository.
+     * In fine convertiamo l'entity salvata in CalendarioResponseDTO e ritornato l'optional
+     * se l' idCalendario da in risposta un Calendario non presente viene ritornato un Optional empty.
      * @param createEventoRequestDTO
      * @return Evento
      */
@@ -44,9 +48,10 @@ public class EventoService {
     }
 
     /**
-     * richiede tutta la lista di Evento presenti
+     * Richiede tutta la lista ddi Evento presenti
      * sul db tramite la repository.
-     * Successivamente ritorna la lista di Evento presenti sul db.
+     * Successivamente converte la lista di entity in response
+     * e ritorna la lista di EventoResponseDTO.
      * @return List</>
      */
     public List<EventoResponseDTO> getEventi(){
@@ -55,11 +60,11 @@ public class EventoService {
     }
 
     /**
-     * dato un Long in ingresso che rappresenta l'id dell'Evento
+     * Dato un Long in ingresso che rappresenta l'id dell'Evento
      * viene cercato l'Evento con il medesimo id tramite la repository,
-     * prima di ritornare l'Evento viene controllato che
-     * l'oggetto sia presente,
-     * in caso contrario viene ritornato un oggetto Optional vuoto.
+     * viene controllato che l'oggetto sia presente e convertito in response,
+     * va in return L'optional del EventoResponseDTO.
+     * In caso contrario viene ritornato un oggetto Optional vuoto.
      * @param id
      * @return Optional</>
      */
@@ -81,10 +86,11 @@ public class EventoService {
     /**
      * Dato un Long id in ingresso viene richiesto al db
      * un Evento con il medesimo id,
-     * se presente viene utilizzato l'Evento preso in
-     * ingresso per modificare tutti i dati dell'evento
-     * e infine viene ritornato l'oggetto Evento modificato.
-     * se invece non è presente viene ritornato un oggetto vuoto.
+     * se presente viene utilizzato l' UpdateEventoRequestDTO preso in
+     * ingresso per modificare tutti i dati dell' Evento Entity,
+     * viene covertito l'oggetto Evento modificato in response,
+     * e ritorna l'Optional del EventoResponseDTO.
+     * Se invece non è presente viene ritornato un oggetto vuoto.
      * @param updateEventoRequestDTO
      * @param id
      * @return Optional</>
@@ -112,10 +118,11 @@ public class EventoService {
     }
 
     /**
-     * dato un Long id in ingresso viene richiesto
+     * Dato un Long id in ingresso viene richiesto
      * al db un Evento col medesimo id.
-     * se presente viene cancellato l'Evento dal db
-     * e infine viene ritornato l'Evento eliminato.
+     * Se presente viene cancellato l'Evento dal db
+     * viene convertita l'entity in response,
+     * ritorna l' EventoResponseDTO.
      * Se non presente viene ritornato un oggetto Optional vuoto.
      * @param id
      * @return Optional</>

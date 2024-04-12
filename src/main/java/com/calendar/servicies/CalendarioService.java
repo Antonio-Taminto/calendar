@@ -27,9 +27,9 @@ public class CalendarioService {
     @Autowired
     private UserRepository userRepository;
     /**
-     * Viene cercato l'User che vuole creare il caledario se prensente
-     * il CreateCalendarioRequestDTO in ingresso gli viene settato
-     * l'user e poi convertito in entity
+     * Viene cercato l'User che vuole creare il Caledario, se presente
+     * il CreateCalendarioRequestDTO viene convertito in entity,
+     * viene settato l'User all'entity
      * che viene salvata al db tramite la repository.
      * In fine convertiamo l'entity salvata in CalendarioResponseDTO e ritornato l'optional
      * se l'User id non da in risposta uno User presente viene ritornato un Optional empty.
