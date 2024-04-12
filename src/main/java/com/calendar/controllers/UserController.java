@@ -1,6 +1,9 @@
 package com.calendar.controllers;
 
 import com.calendar.entities.Calendario;
+import com.calendar.entities.DTO.request.CreateUserRequestDTO;
+import com.calendar.entities.DTO.request.UpdateUserRequestDTO;
+import com.calendar.entities.DTO.response.UserResponseDTO;
 import com.calendar.entities.Evento;
 import com.calendar.entities.User;
 import com.calendar.servicies.UserService;
@@ -28,19 +31,19 @@ public class UserController {
                     "Salva nel database l'oggetto richiesto."+
                     "La risposta è l' User Calendario appena creato con id,nome,data di nascita, lista di calendari." ,
             tags = { "User", "post" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = UserResponseDTO.class), mediaType = "application/json") })
     @PostMapping("/crea")
-    public ResponseEntity<User> postUser(@RequestBody User user){
-        return ResponseEntity.ok().body(service.addUser(user));
+    public ResponseEntity<UserResponseDTO> postUser(@RequestBody CreateUserRequestDTO createUserRequestDTO){
+        return ResponseEntity.ok().body(service.addUser(createUserRequestDTO));
     }
     @Operation(
             summary = "Recupera la lista di tutti gli User presenti",
             description = "richiede la lista di User." +
                     "La risposta è una lista di oggetto User con id,nome,data di nascita, lista di calendari." ,
             tags = { "User", "get" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = UserResponseDTO.class), mediaType = "application/json") })
     @GetMapping("/prenditutti")
-    public ResponseEntity<List<User>> getAllUsers(){
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers(){
         return ResponseEntity.ok().body(service.getAll());
     }
     @Operation(
@@ -48,10 +51,10 @@ public class UserController {
             description = "richiede uno User dato l'id." +
                     "La risposta è un oggetto User con id,nome,data di nascita, lista di calendari." ,
             tags = { "User", "get" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = UserResponseDTO.class), mediaType = "application/json") })
     @GetMapping("/prendi/{id}")
-    public ResponseEntity<User> getFromId(@PathVariable Long id){
-        Optional<User> userOptional = service.getUserFromId(id);
+    public ResponseEntity<UserResponseDTO> getFromId(@PathVariable Long id){
+        Optional<UserResponseDTO> userOptional = service.getUserFromId(id);
         if(userOptional.isEmpty()){
             return ResponseEntity.notFound().build();
         }
@@ -63,10 +66,10 @@ public class UserController {
                     "Recupera l' User dall'id,lo modifica con i dati in ingresso e salva l' User modificato" +
                     "La risposta è l' oggetto User appena modificato con id,nome,data di nascita, lista di calendari." ,
             tags = { "User", "put" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = UserResponseDTO.class), mediaType = "application/json") })
     @PutMapping("/modifica/{id}")
-    public ResponseEntity<User> putUser(@PathVariable Long id , @RequestBody User user){
-        Optional<User> userOptional = service.updateUser(id,user);
+    public ResponseEntity<UserResponseDTO> putUser(@PathVariable Long id , @RequestBody UpdateUserRequestDTO updateUserRequestDTO){
+        Optional<UserResponseDTO> userOptional = service.updateUser(id,updateUserRequestDTO);
         if(userOptional.isEmpty()){
             return ResponseEntity.notFound().build();
         }
@@ -78,28 +81,14 @@ public class UserController {
                     "una volta recuperato l' User lo elimina " +
                     "La risposta è l' oggetto User appena eliminato con id,nome,data di nascita, lista di calendari." ,
             tags = { "User", "delete" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = UserResponseDTO.class), mediaType = "application/json") })
     @DeleteMapping("/elimina/{id}")
-    public ResponseEntity<User> deleteFromId(@PathVariable Long id){
-        Optional<User> userOptional = service.deleteUserFromId(id);
+    public ResponseEntity<UserResponseDTO> deleteFromId(@PathVariable Long id){
+        Optional<UserResponseDTO> userOptional = service.deleteUserFromId(id);
         if(userOptional.isEmpty()){
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(userOptional.get());
     }
-    @Operation(
-            summary = "Recupera uno User dall'id e gli aggiunge un Calendario recuperato dall'id",
-            description = "richiede uno User e un Calendario dato l'id di entrambi." +
-                    "recuperato l' User , viene recuperato il Calendario e salvato nella lista di Calendari"+
-                    "La risposta è un oggetto User con id,nome,data di nascita, lista di calendari." ,
-            tags = { "User", "put" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
-    @PutMapping("/aggiungicalendario/{id}")
-    public ResponseEntity<User> putCalendario(@PathVariable Long id,@RequestParam Long calendario){
-        Optional<User> userOptional = service.addCalendarioToUser(id,calendario);
-        if(userOptional.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(userOptional.get());
-    }
+
 }

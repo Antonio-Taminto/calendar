@@ -1,8 +1,9 @@
 package com.calendar.controllers;
 
 import com.calendar.entities.Calendario;
-import com.calendar.entities.DTO.CreateEventoRequestDTO;
-import com.calendar.entities.DTO.EventoResponseDTO;
+import com.calendar.entities.DTO.request.CreateEventoRequestDTO;
+import com.calendar.entities.DTO.request.UpdateEventoRequestDTO;
+import com.calendar.entities.DTO.response.EventoResponseDTO;
 import com.calendar.servicies.EventoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,19 +30,24 @@ public class EventoController {
                     "Salva nel database l'oggetto richiesto."+
                     "La risposta è l' oggetto Evento appena creato con id,nome,descrizione,data inizio,data fine." ,
             tags = { "Evento", "post" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = EventoResponseDTO.class), mediaType = "application/json") })
     @PostMapping("/crea")
-    public ResponseEntity<EventoResponseDTO> postEvento(@RequestBody CreateEventoRequestDTO evento){
-        return ResponseEntity.ok().body(service.addEvento(evento));
+    public ResponseEntity<EventoResponseDTO> postEvento(@RequestBody CreateEventoRequestDTO evento,@RequestParam Long idCalendario){
+        Optional<EventoResponseDTO> eventoResponseDTOOptional = service.addEvento(evento,idCalendario);
+        if (eventoResponseDTOOptional.isPresent()){
+            return ResponseEntity.ok().body(eventoResponseDTOOptional.get());
+        }else {
+            return ResponseEntity.badRequest().build();
+        }
     }
     @Operation(
             summary = "Recupera la lista di tutti gli Evento presenti",
             description = "richiede la lista di Evento." +
                     "La risposta è una lista di oggetto Evento con id,nome,descrizione,data inizio,data fine." ,
             tags = { "Evento", "get" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = EventoResponseDTO.class), mediaType = "application/json") })
     @GetMapping("/prenditutti")
-    public ResponseEntity<List<Evento>> getEventi(){
+    public ResponseEntity<List<EventoResponseDTO>> getEventi(){
         return ResponseEntity.ok().body(service.getEventi());
     }
     @Operation(
@@ -49,10 +55,10 @@ public class EventoController {
             description = "richiede un Evento dato l'id." +
                     "La risposta è un oggetto Evento con id,nome,descrizione,data inizio,data fine." ,
             tags = { "Evento", "get" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = EventoResponseDTO.class), mediaType = "application/json") })
     @GetMapping("/prendi/{id}")
-    public ResponseEntity<Evento> getEventoById(@PathVariable Long id){
-        Optional<Evento> eventoOptional = service.getEvento(id);
+    public ResponseEntity<EventoResponseDTO> getEventoById(@PathVariable Long id){
+        Optional<EventoResponseDTO> eventoOptional = service.getEvento(id);
         if(eventoOptional.isEmpty()){
             return ResponseEntity.notFound().build();
         }
@@ -64,12 +70,12 @@ public class EventoController {
                     "Recupera l' Evento dall'id,lo modifica con i dati in ingresso e salva l' Evento modificato" +
                     "La risposta è l' oggetto Evento modificato con id,nome,descrizione,data inizio,data fine." ,
             tags = { "Evento", "put" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = EventoResponseDTO.class), mediaType = "application/json") })
     @PutMapping("/modifica/{id}")
-    public ResponseEntity<Evento> updateEvento(
+    public ResponseEntity<EventoResponseDTO> updateEvento(
             @PathVariable Long id,
-            @RequestBody Evento evento){
-        Optional<Evento> eventoOptional = service.updateEvento(evento,id);
+            @RequestBody UpdateEventoRequestDTO updateEventoRequestDTO){
+        Optional<EventoResponseDTO> eventoOptional = service.updateEvento(updateEventoRequestDTO,id);
         if(eventoOptional.isEmpty()){
             return ResponseEntity.notFound().build();
         }
@@ -81,10 +87,10 @@ public class EventoController {
                     "una volta recuperato l' Evento lo elimina " +
                     "La risposta è l' oggetto Evento appena eliminato con id,nome,descrizione,data inizio,data fine." ,
             tags = { "Evento", "delete" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = EventoResponseDTO.class), mediaType = "application/json") })
     @DeleteMapping("/elimina/{id}")
-    public ResponseEntity<Evento> deleteEventoById(@PathVariable Long id){
-        Optional<Evento> eventoOptional = service.deleteEventoById(id);
+    public ResponseEntity<EventoResponseDTO> deleteEventoById(@PathVariable Long id){
+        Optional<EventoResponseDTO> eventoOptional = service.deleteEventoById(id);
         if(eventoOptional.isEmpty()){
             return ResponseEntity.notFound().build();
         }

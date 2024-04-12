@@ -1,6 +1,9 @@
 package com.calendar.controllers;
 
 import com.calendar.entities.Calendario;
+import com.calendar.entities.DTO.request.CreateCalendarioRequestDTO;
+import com.calendar.entities.DTO.request.UpdateCalendarioRequestDTO;
+import com.calendar.entities.DTO.response.CalendarioResponseDTO;
 import com.calendar.entities.Evento;
 import com.calendar.servicies.CalendarioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,19 +31,24 @@ public class CalendarioController {
                     "Salva nel database l'oggetto richiesto."+
                     "La risposta è l' oggetto Calendario appena creato con id,nome,descrizione,colore,lista di eventi." ,
             tags = { "Calendario", "post" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
-    @PostMapping("/crea")
-    public ResponseEntity<Calendario> postCalendario(@RequestBody Calendario calendario){
-        return ResponseEntity.ok().body(service.addCalendario(calendario));
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = CalendarioResponseDTO.class), mediaType = "application/json") })
+    @PostMapping("/crea/{userId}")
+    public ResponseEntity<CalendarioResponseDTO> postCalendario(@RequestBody CreateCalendarioRequestDTO calendario,@PathVariable(name = "userId") Long userId){
+        Optional<CalendarioResponseDTO> calendarioResponseDTOOptional = service.addCalendario(calendario,userId);
+        if(calendarioResponseDTOOptional.isPresent()) {
+            return ResponseEntity.ok().body(calendarioResponseDTOOptional.get());
+        }else {
+            return ResponseEntity.badRequest().build();
+        }
     }
     @Operation(
             summary = "Recupera la lista di tutti i Calendario presenti",
             description = "richiede la lista di Calendario." +
                     "La risposta è una lista di oggetto Calendario con id,nome,descrizione,colore,lista di eventi." ,
             tags = { "Calendario", "get" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = CalendarioResponseDTO.class), mediaType = "application/json") })
     @GetMapping("/prenditutti")
-    public ResponseEntity<List<Calendario>> getCalendari(){
+    public ResponseEntity<List<CalendarioResponseDTO>> getCalendari(){
         return ResponseEntity.ok().body(service.getCalendari());
     }
     @Operation(
@@ -48,10 +56,10 @@ public class CalendarioController {
             description = "richiede un Calendario dato l'id." +
                     "La risposta è un oggetto Calendario con id,nome,descrizione,colore,lista di eventi." ,
             tags = { "Calendario", "get" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = CalendarioResponseDTO.class), mediaType = "application/json") })
     @GetMapping("/prendi/{id}")
-    public ResponseEntity<Calendario> getCalendario(@PathVariable Long id){
-        Optional<Calendario> calendarioOptional = service.getCalendarioById(id);
+    public ResponseEntity<CalendarioResponseDTO> getCalendario(@PathVariable Long id){
+        Optional<CalendarioResponseDTO> calendarioOptional = service.getCalendarioById(id);
         if(calendarioOptional.isEmpty()){
             return ResponseEntity.notFound().build();
         }
@@ -63,10 +71,10 @@ public class CalendarioController {
                     "Recupera il Calendario dall'id,lo modifica con i dati in ingresso e salva il Calendario modificato" +
                     "La risposta è l' oggetto Calendario modificato con id,nome,descrizione,colore,lista di eventi." ,
             tags = { "Calendario", "put" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = CalendarioResponseDTO.class), mediaType = "application/json") })
     @PutMapping("/modifica/{id}")
-    public ResponseEntity<Calendario> putCalendario(@PathVariable Long id,@RequestBody Calendario calendario){
-        Optional<Calendario> calendarioOptional = service.updateCalendario(calendario,id);
+    public ResponseEntity<CalendarioResponseDTO> putCalendario(@PathVariable Long id,@RequestBody UpdateCalendarioRequestDTO calendarioRequestDTO){
+        Optional<CalendarioResponseDTO> calendarioOptional = service.updateCalendario(calendarioRequestDTO,id);
         if(calendarioOptional.isEmpty()){
             return ResponseEntity.notFound().build();
         }
@@ -78,25 +86,10 @@ public class CalendarioController {
                     "una volta recuperato il Calendario lo elimina " +
                     "La risposta è l' oggetto Calendario appena eliminato con id,nome,descrizione,colore,lista di eventi." ,
             tags = { "Calendario", "delete" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
+    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = CalendarioResponseDTO.class), mediaType = "application/json") })
     @DeleteMapping("/elimina/{id}")
-    public ResponseEntity<Calendario> deleteCalendario(@PathVariable Long id){
-        Optional<Calendario> calendarioOptional = service.deleteCalendarioById(id);
-        if(calendarioOptional.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(calendarioOptional.get());
-    }
-    @Operation(
-            summary = "Recupera un Calendario dall'id e gli aggiunge un Evento recuperato dall'id",
-            description = "richiede un Calendario e un Evento dato l'id di entrambi." +
-                    "recuperato il Calendario , viene recuperato l'Evento e salvato nella lista di Eventi"+
-                    "La risposta è un oggetto Calendario con id,nome,descrizione,colore,lista di eventi." ,
-            tags = { "Calendario", "put" })
-    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Calendario.class), mediaType = "application/json") })
-    @PutMapping("/aggiungievento/{id}/")
-    public ResponseEntity<Calendario> addEvento(@PathVariable Long id, @RequestParam Long evento){
-        Optional<Calendario> calendarioOptional = service.addEventoToCalendario(id,evento);
+    public ResponseEntity<CalendarioResponseDTO> deleteCalendario(@PathVariable Long id){
+        Optional<CalendarioResponseDTO> calendarioOptional = service.deleteCalendarioById(id);
         if(calendarioOptional.isEmpty()){
             return ResponseEntity.notFound().build();
         }

@@ -1,4 +1,4 @@
-package com.calendar.entities.DTO;
+package com.calendar.entities.DTO.response;
 
 import java.time.LocalDateTime;
 

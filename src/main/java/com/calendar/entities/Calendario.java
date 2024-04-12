@@ -21,7 +21,6 @@ public class Calendario {
     private List<Evento> eventoList;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
 
     public Calendario(Long id, String nome, String descrizione, String colore, List<Evento> eventoList,User user) {

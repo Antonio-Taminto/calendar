@@ -1,8 +1,12 @@
 package com.calendar.servicies;
 
-import com.calendar.entities.DTO.CreateEventoRequestDTO;
-import com.calendar.entities.DTO.EventoResponseDTO;
+import com.calendar.entities.Calendario;
+import com.calendar.entities.DTO.request.CreateEventoRequestDTO;
+import com.calendar.entities.DTO.request.UpdateEventoRequestDTO;
+import com.calendar.entities.DTO.response.EventoResponseDTO;
 import com.calendar.entities.Evento;
+import com.calendar.mappers.EventoMapper;
+import com.calendar.repositories.CalendarioRepository;
 import com.calendar.repositories.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +19,10 @@ public class EventoService {
 
     @Autowired
     private EventoRepository repository;
+    @Autowired
+    private EventoMapper eventoMapper;
+    @Autowired
+    private CalendarioRepository calendarioRepository;
 
     /**
      * dato un Evento in ingresso viene salvato
@@ -22,21 +30,17 @@ public class EventoService {
      * @param createEventoRequestDTO
      * @return Evento
      */
-    public EventoResponseDTO addEvento(CreateEventoRequestDTO createEventoRequestDTO){
-        Evento evento = new Evento();
-        evento.setNome(createEventoRequestDTO.getNome());
-        evento.setDescrizione(createEventoRequestDTO.getDescrizione());
-        evento.setDataInizio(createEventoRequestDTO.getDataInizio());
-        evento.setDataFine(createEventoRequestDTO.getDataFine());
-
-        Evento savedEvento = repository.save(evento);
-        EventoResponseDTO eventoResponseDTO = new EventoResponseDTO();
-        eventoResponseDTO.setId(savedEvento.getId());
-        eventoResponseDTO.setNome(savedEvento.getNome());
-        eventoResponseDTO.setDescrizione(savedEvento.getDescrizione());
-        eventoResponseDTO.setDataInizio(savedEvento.getDataInizio());
-        eventoResponseDTO.setDataFine(savedEvento.getDataFine());
-        return eventoResponseDTO;
+    public Optional<EventoResponseDTO> addEvento(CreateEventoRequestDTO createEventoRequestDTO,Long idCalendario){
+        Optional<Calendario> calendarioOptional = calendarioRepository.findById(idCalendario);
+        if(calendarioOptional.isPresent()) {
+            Evento evento = eventoMapper.convertEventoRequestToEntity(createEventoRequestDTO);
+            evento.setCalendario(calendarioOptional.get());
+            Evento savedEvento = repository.save(evento);
+            EventoResponseDTO eventoResponseDTO = eventoMapper.convertEventoEntityToResponse(savedEvento);
+            return Optional.of(eventoResponseDTO);
+        }else {
+            return Optional.empty();
+        }
     }
 
     /**
@@ -45,9 +49,9 @@ public class EventoService {
      * Successivamente ritorna la lista di Evento presenti sul db.
      * @return List</>
      */
-    public List<Evento> getEventi(){
-        //ritorniamo tutta la lista degli oggetti
-        return repository.findAll();
+    public List<EventoResponseDTO> getEventi(){
+        //ritorniamo tutta la lista degli oggetti convertiti in una lista di response
+        return eventoMapper.mapList(repository.findAll());
     }
 
     /**
@@ -59,13 +63,15 @@ public class EventoService {
      * @param id
      * @return Optional</>
      */
-    public Optional<Evento> getEvento(Long id){
+    public Optional<EventoResponseDTO> getEvento(Long id){
         //cerchiamo l'oggetto tramite id
         Optional<Evento> eventoOptional = repository.findById(id);
         //controlliamo che l'oggetto Optional sia presente
         if(eventoOptional.isPresent()){
-            //se presente ritorniamo l'oggetto Optional
-            return eventoOptional;
+            //se presente convertiamo l'entity in response
+            EventoResponseDTO response = eventoMapper.convertEventoEntityToResponse(eventoOptional.get());
+            //ritorniamo l'Optional della response
+            return Optional.of(response);
         }else {
             //se non presente ritorniamo un oggetto Optional vuoto
             return Optional.empty();
@@ -79,24 +85,26 @@ public class EventoService {
      * ingresso per modificare tutti i dati dell'evento
      * e infine viene ritornato l'oggetto Evento modificato.
      * se invece non è presente viene ritornato un oggetto vuoto.
-     * @param evento
+     * @param updateEventoRequestDTO
      * @param id
      * @return Optional</>
      */
-    public Optional<Evento> updateEvento(Evento evento,Long id) {
+    public Optional<EventoResponseDTO> updateEvento(UpdateEventoRequestDTO updateEventoRequestDTO, Long id) {
         //recuperiamo l'oggetto da modificare grazie all'id
-        Optional<Evento> eventoOptional = getEvento(id);
+        Optional<Evento> eventoOptional = repository.findById(id);
         //controlliamo se l'oggetto è presente
         if (eventoOptional.isPresent()) {
             //modifichiamo tutti i parametri dell'oggetto
-            eventoOptional.get().setNome(evento.getNome());
-            eventoOptional.get().setDescrizione(evento.getDescrizione());
-            eventoOptional.get().setDataInizio(evento.getDataInizio());
-            eventoOptional.get().setDataFine(evento.getDataFine());
+            eventoOptional.get().setNome(updateEventoRequestDTO.getNome());
+            eventoOptional.get().setDescrizione(updateEventoRequestDTO.getDescrizione());
+            eventoOptional.get().setDataInizio(updateEventoRequestDTO.getDataInizio());
+            eventoOptional.get().setDataFine(updateEventoRequestDTO.getDataFine());
             //salviamo l'oggetto aggiornato
             Evento eventoUpdated = repository.save(eventoOptional.get());
-            //ritorniamo l'oggetto che è stato aggiornato
-            return Optional.of(eventoUpdated);
+            //convertiamo l'entity in response
+            EventoResponseDTO response = eventoMapper.convertEventoEntityToResponse(eventoUpdated);
+            //ritorniamo l'Optional della response
+            return Optional.of(response);
         } else {
             //se non presente ritorniamo un oggetto vuoto
             return Optional.empty();
@@ -112,15 +120,17 @@ public class EventoService {
      * @param id
      * @return Optional</>
      */
-    public Optional<Evento> deleteEventoById(Long id){
+    public Optional<EventoResponseDTO> deleteEventoById(Long id){
         //recuperiamo l'oggetto da eliminare tramite l'id
-        Optional<Evento> eventoOptional = getEvento(id);
+        Optional<Evento> eventoOptional = repository.findById(id);
         //controlliamo che l'oggetto sia presente
         if(eventoOptional.isPresent()){
             //cancelliamo l'oggetto
             repository.delete(eventoOptional.get());
-            //ritorniamo l'oggetto cancellato
-            return eventoOptional;
+            //convertiamo l'entity in response
+            EventoResponseDTO response = eventoMapper.convertEventoEntityToResponse(eventoOptional.get());
+            //ritorniamo l'Optional della response
+            return Optional.of(response);
         }else{
             //se non presente viene ritornato un oggetto vuoto
             return Optional.empty();

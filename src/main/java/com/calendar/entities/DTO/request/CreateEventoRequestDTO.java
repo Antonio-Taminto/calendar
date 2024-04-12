@@ -1,4 +1,7 @@
-package com.calendar.entities.DTO;
+package com.calendar.entities.DTO.request;
+
+import com.calendar.entities.Calendario;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
 
@@ -8,11 +11,13 @@ public class CreateEventoRequestDTO {
     private LocalDateTime dataInizio;
     private LocalDateTime dataFine;
 
+
     public CreateEventoRequestDTO(LocalDateTime dataFine, LocalDateTime dataInizio, String descrizione, String nome) {
         this.dataFine = dataFine;
         this.dataInizio = dataInizio;
         this.descrizione = descrizione;
         this.nome = nome;
+
     }
 
     public CreateEventoRequestDTO() {
