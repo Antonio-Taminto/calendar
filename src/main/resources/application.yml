@@ -1,5 +1,8 @@
 spring:
   output.ansi.enabled: ALWAYS
+  config:
+    activate:
+      on-profile: dev
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/calendar
     username: root
