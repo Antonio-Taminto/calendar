@@ -35,12 +35,19 @@ public class EventoService {
      * @return Evento
      */
     public Optional<EventoResponseDTO> addEvento(CreateEventoRequestDTO createEventoRequestDTO,Long idCalendario){
+        //recuperiamo il Calendario dell'id
         Optional<Calendario> calendarioOptional = calendarioRepository.findById(idCalendario);
+        //controlliamo se sia presente
         if(calendarioOptional.isPresent()) {
+            //se presente convertiamo la request createEventoRequestDTO nell' entity Evento
             Evento evento = eventoMapper.convertEventoRequestToEntity(createEventoRequestDTO);
+            //settiamo il calendario recuperato in precedenza all'evento
             evento.setCalendario(calendarioOptional.get());
+            //salviamo l'evento nel db tramite la repository
             Evento savedEvento = repository.save(evento);
+            //convertiamo l'entity appena salvata in response EventoResponseDTO
             EventoResponseDTO eventoResponseDTO = eventoMapper.convertEventoEntityToResponse(savedEvento);
+            //ritorniamo l'Optional della response
             return Optional.of(eventoResponseDTO);
         }else {
             return Optional.empty();

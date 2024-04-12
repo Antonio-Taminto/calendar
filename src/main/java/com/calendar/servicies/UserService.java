@@ -24,21 +24,26 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
     /**
-     * dato un User in ingresso viene salvato
-     * al db tramite la repository.
+     * Dato un CreateUserRequestDTO in ingresso viene convertito
+     * in entity, salvato al db tramite la repository.
+     * Viene convertita l'Entity in response e ritorna l'UserResponseDTO
      * @param createUserRequestDTO
      * @return Evento
      */
     public UserResponseDTO addUser(CreateUserRequestDTO createUserRequestDTO){
+        //convertiamo con il mapper il CreateUserRequestDTO in User
         User user = userMapper.convertUserRequestToEntity(createUserRequestDTO);
+        //salviamo sul db tramite la repository lo user
         User userSaved = repository.save(user);
+        //convertiamo con il mapper l' entity User in response UserResponseDTO
         UserResponseDTO userResponseDTO = userMapper.convertUserEntityToResponse(userSaved);
+        //ritorniamo la response
         return userResponseDTO;
     }
     /**
-     * richiede tutta la lista di User presenti
+     * Richiede tutta la lista di User presenti
      * sul db tramite la repository.
-     * Successivamente ritorna la lista di User presenti sul db.
+     * Converte la lista di entity in response e la ritorna.
      * @return List</>
      */
     public List<UserResponseDTO> getAll(){
@@ -46,10 +51,9 @@ public class UserService {
         return userMapper.mapList(repository.findAll());
     }
     /**
-     * dato un Long in ingresso che rappresenta l'id dell'User
+     * Dato un Long in ingresso che rappresenta l'id dell' User
      * viene cercato l'User con il medesimo id tramite la repository,
-     * prima di ritornare l'User viene controllato che
-     * l'oggetto sia presente,
+     * se presente viene convertita l' entity in response e poi ritornata
      * in caso contrario viene ritornato un oggetto Optional vuoto.
      * @param id
      * @return Optional</>
@@ -71,10 +75,10 @@ public class UserService {
     /**
      * Dato un Long id in ingresso viene richiesto al db
      * un User con il medesimo id,
-     * se presente viene utilizzato l' User preso in
-     * ingresso per modificare tutti i dati dell'evento
-     * e infine viene ritornato l'oggetto User modificato.
-     * se invece non è presente viene ritornato un oggetto vuoto.
+     * se presente viene utilizzato l' UpdateUserRequestDTO preso in
+     * ingresso per modificare tutti i dati dello User
+     * viene salvato e successivamente convertito in response che viene ritornata.
+     * Se invece non è presente viene ritornato un oggetto vuoto.
      * @param updateUserRequestDTO
      * @param id
      * @return Optional</>
@@ -100,10 +104,10 @@ public class UserService {
         }
     }
     /**
-     * dato un Long id in ingresso viene richiesto
-     * al db un User col medesimo id.
-     * se presente viene cancellato l'User dal db
-     * e infine viene ritornato l'User eliminato.
+     * Dato un Long id in ingresso viene richiesto
+     * al db uno User col medesimo id.
+     * Se presente viene cancellato l'User dal db
+     * e infine convertita l' entity in response e viene ritornata.
      * Se non presente viene ritornato un oggetto Optional vuoto.
      * @param id
      * @return Optional</>
